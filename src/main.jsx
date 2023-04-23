@@ -1,51 +1,56 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Checkout from './components/Checkout/Checkout';
-import Inventory from './components/Inventory/Inventory';
-import Home from './components/Layout/Home';
-import Login from './components/Login/Login';
-import Orders from './components/Orders/Orders';
-import Shop from './components/Shop/Shop';
-import './index.css';
-import cartProductsLoader from './loaders/cartProductLoader';
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Checkout from "./components/Checkout/Checkout";
+import Inventory from "./components/Inventory/Inventory";
+import Home from "./components/Layout/Home";
+import Login from "./components/Login/Login";
+import Orders from "./components/Orders/Orders";
+import AuthProvider from "./components/providers/AuthProvider";
+import PrivateRoute from "./components/routes/PrivateRoute";
+import Shop from "./components/Shop/Shop";
+import SignUp from "./components/SignUp/SignUp";
+import "./index.css";
+import cartProductsLoader from "./loaders/cartProductLoader";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Home></Home>,
     children: [
       {
-        path: '/',
-        element: <Shop></Shop>
+        path: "/",
+        element: <Shop></Shop>,
       },
       {
-        path: 'orders',
+        path: "orders",
         element: <Orders></Orders>,
-        loader: cartProductsLoader
+        loader: cartProductsLoader,
       },
       {
-        path: 'inventory',
-        element: <Inventory></Inventory>
+        path: "inventory",
+        element: <Inventory></Inventory>,
       },
       {
-        path:'checkout',
-        element: <Checkout></Checkout>
+        path: "checkout",
+        element: <PrivateRoute><Checkout></Checkout></PrivateRoute>,
       },
       {
-        path: 'login',
-        element: <Login></Login>
-      }
-    ]
-  }
-])
+        path: "login",
+        element: <Login></Login>,
+      },
+      {
+        path: "signup",
+        element: <SignUp></SignUp>,
+      },
+    ],
+  },
+]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </React.StrictMode>
+);
